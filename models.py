@@ -55,7 +55,7 @@ class CollectionEntry(db.Model):
     """Represents a film a user has already watched and logged."""
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     user_id = db.Column(db.String(36), db.ForeignKey("user.id"), nullable=False)
-    film_id = db.Column(db.String(36), db.ForeignKey("film.id"), nullable=False)
+    film_id = db.Column(db.Integer, db.ForeignKey("film.id"), nullable=False)
     date_added = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     rating = db.Column(db.Integer, nullable=True)  # 1–5, optional
 
@@ -70,4 +70,27 @@ class CollectionEntry(db.Model):
             "film_id": self.film_id,
             "date_added": self.date_added.isoformat(),
             "rating": self.rating,
+        }
+
+
+class WatchlistEntry(db.Model):
+    """Represents a film a user wants to watch later."""
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    user_id = db.Column(db.String(36), db.ForeignKey("user.id"), nullable=False)
+    film_id = db.Column(db.String(36), db.ForeignKey("film.id"), nullable=False)
+    date_added = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    public = db.Column(db.Boolean, default=True, nullable=False)
+
+    user = db.relationship("User", backref="watchlist_entries")
+    film = db.relationship("Film", backref="watchlist_entries")
+
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "film_id": self.film_id,
+            "date_added": self.date_added.isoformat(),
+            "public": self.public,
         }
