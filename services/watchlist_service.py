@@ -13,7 +13,7 @@ class NotInWatchlistError(Exception):
     """Raised when trying to remove a film that isn't in the watchlist."""
 
 
-def save_to_watchlist(user_id, film_id, public=True):
+def add_to_watchlist(user_id, film_id, public=True):
     """
     Save a film to a user's watchlist.
 
