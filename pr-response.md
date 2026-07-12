@@ -2,7 +2,7 @@
 
 ## AI Usage
 
-I used AI to help orient me in the repository, locate the PR comments, compare the watchlist code with the collection service, and stress-test my decisions about visibility and sorting. I verified its suggestions against the actual source and test suite. One useful challenge was that a public default can expose user intent; I kept the existing default for compatibility but added an explicit API parameter so clients can choose privacy at creation time.
+I used AI for repository orientation and review hygiene. I asked it to compare the watchlist service with `add_to_collection()`, identify all `save_to_watchlist` call sites, and stress-test the two design decisions. For Comment 4, the counterargument it raised was that a public default can expose viewing interests; I kept the public default because CineLog is community-oriented, but made the `public` parameter explicit and added that privacy tradeoff to my response. For Comment 5, it challenged whether alphabetical order is easier for title lookup; I kept newest-first because watchlists are primarily queues of recent intent and CineLog already uses newest-first for collections. I verified every code-related suggestion against the source and test suite.
 
 ## Comment 1 — Rename
 
@@ -49,6 +49,8 @@ I used AI to help orient me in the repository, locate the PR comments, compare t
 ## Stretch Features
 
 I added two focused safeguards beyond the requested missing-film test: duplicate insertion coverage and newest-first ordering coverage. I chose them because those are the two behaviors most likely to regress during service or query changes. I also added the visibility toggle requested in the stretch goals: `POST /watchlist/<user_id>/add` accepts an optional `public` boolean, with a test proving `false` is preserved.
+
+I also added `remove_from_watchlist(user_id, film_id)`, mirroring the existing collection removal pattern. It deletes an existing entry and raises `NotInWatchlistError` when there is nothing to remove; dedicated tests cover both outcomes.
 
 ## Rewritten Commit History
 

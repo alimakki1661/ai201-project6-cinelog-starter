@@ -9,8 +9,10 @@ from models import Film, User, WatchlistEntry
 from services.collection_service import FilmNotFoundError
 from services.watchlist_service import (
     AlreadyInWatchlistError,
+    NotInWatchlistError,
     add_to_watchlist,
     get_watchlist,
+    remove_from_watchlist,
 )
 
 
@@ -63,6 +65,22 @@ def test_add_to_watchlist_duplicate_raises(app, sample_user, sample_film):
         assert WatchlistEntry.query.filter_by(
             user_id=sample_user, film_id=sample_film
         ).count() == 1
+
+
+def test_remove_from_watchlist_removes_entry(app, sample_user, sample_film):
+    with app.app_context():
+        add_to_watchlist(sample_user, sample_film)
+
+        assert remove_from_watchlist(sample_user, sample_film) is True
+        assert WatchlistEntry.query.filter_by(
+            user_id=sample_user, film_id=sample_film
+        ).count() == 0
+
+
+def test_remove_from_watchlist_missing_raises(app, sample_user, sample_film):
+    with app.app_context():
+        with pytest.raises(NotInWatchlistError):
+            remove_from_watchlist(sample_user, sample_film)
 
 
 def test_get_watchlist_returns_newest_first(app, sample_user):
