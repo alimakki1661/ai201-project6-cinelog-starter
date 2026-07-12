@@ -50,6 +50,12 @@ I used AI to help orient me in the repository, locate the PR comments, compare t
 
 I added two focused safeguards beyond the requested missing-film test: duplicate insertion coverage and newest-first ordering coverage. I chose them because those are the two behaviors most likely to regress during service or query changes. I also added the visibility toggle requested in the stretch goals: `POST /watchlist/<user_id>/add` accepts an optional `public` boolean, with a test proving `false` is preserved.
 
+## Rewritten Commit History
+
+The feature branch contains three logical implementation commits plus this documentation commit, all using conventional commit format and with no feature-branch merge commits:
+
+![Screenshot of git log --oneline showing conventional commits](git-log.png)
+
 ## PR Description
 
 ### Overview
